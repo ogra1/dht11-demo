@@ -1,0 +1,40 @@
+name: dht11-demo
+base: core20
+version: '0.1'
+summary: A demo to show humidity and temp on a website on a Pi with DHT11
+description: |
+  DHT11 demo
+
+grade: stable
+confinement: strict
+
+apps:
+  webserver:
+    command: bin/python3 $SNAP/app.py
+    daemon: simple
+    plugs:
+      - gpio
+      - hardware-observe
+      - network
+      - network-bind
+      - physical-memory-control
+
+parts:
+  py-packages:
+    plugin: python
+    python-packages:
+      - python-dateutil
+      - RPi.GPIO
+      - flask
+      - flask-restful
+      - dht11
+    build-packages:
+      - build-essential
+  flask-server:
+    plugin: dump
+    source: https://github.com/SaadAhmedSalim/DHT11-Flask-Project.git
+    organize:
+      Webserver: /
+    stage:
+      - -test*
+      - -README.md
